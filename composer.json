@@ -1,0 +1,52 @@
+{
+    "name": "henzeb/query-filter-builder",
+    "description": "A fancy way to build filters",
+    "keywords": [
+        "henzeb",
+        "query",
+        "filter",
+        "builder",
+        "laravel",
+        "agnostic"
+    ],
+    "homepage": "https://github.com/henzeb/query-filter-builder",
+    "license": "AGPL-3.0-only",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Henze Berkheij",
+            "email": "henzeberkheij@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "illuminate/support": "^8.0|^9.0",
+        "mockery/mockery": "^1.5",
+        "orchestra/testbench": "^7.0",
+        "phpstan/phpstan": "^1.4",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Henzeb\\Query\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Henzeb\\Query\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage-txt": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
+        "test-dox": "vendor/bin/phpunit --testdox"
+
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
