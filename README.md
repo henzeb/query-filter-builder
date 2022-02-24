@@ -8,11 +8,10 @@ a nice and simple interface that allows you to add filters without the
 need of a thousand parameters passed to your methods or writing SQL queries 
 inside your controllers.
 
-This comes with support for Laravel's query builder. No other builders as of yet.
-If you'd  like to contribute, see [Contributing](CONTRIBUTING.md).
+This comes with support for Laravel. If you'd  like to contribute
+for other frameworks, see [Contributing](CONTRIBUTING.md).
 
 ## Installation
-
 You can install the package via composer:
 
 ```bash
@@ -20,6 +19,8 @@ composer require henzeb/query-filter-builder
 ```
 
 ## Usage
+See [here](doc/LARAVEL.md) for Laravel specific usage.
+
 In your controller you may build up something like this, based on parameters
 given by the user of your application.
 

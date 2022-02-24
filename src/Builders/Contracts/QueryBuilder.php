@@ -83,4 +83,8 @@ interface QueryBuilder
     public function limit(int $limit): void;
 
     public function offset(int $offset): void;
+
+    public function asc(string $key): void;
+
+    public function desc(string $key): void;
 }

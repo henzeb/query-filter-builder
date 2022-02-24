@@ -193,6 +193,16 @@ class Builder implements QueryBuilder
         $this->getBuilder()->offset($offset);
     }
 
+    public function asc(string $key): void
+    {
+        $this->getBuilder()->orderBy($key);
+    }
+
+    public function desc(string $key): void
+    {
+        $this->getBuilder()->orderByDesc($key);
+    }
+
     public function nest(QueryFilter $query): void
     {
         $this->getBuilder()->where(

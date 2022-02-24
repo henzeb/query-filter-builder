@@ -46,6 +46,10 @@ interface QueryFilter
 
     public function offset(int $offset): self;
 
+    public function asc(string $key): self;
+
+    public function desc(string $key): self;
+
     public function and(): self;
 
     public function or(): self;

@@ -161,6 +161,16 @@ class Query implements QueryFilter
         return $this->addFilter(__FUNCTION__, get_defined_vars());
     }
 
+    public function asc(string $key): QueryFilter
+    {
+        return $this->addFilter(__FUNCTION__, get_defined_vars());
+    }
+
+    public function desc(string $key): QueryFilter
+    {
+        return $this->addFilter(__FUNCTION__, get_defined_vars());
+    }
+
     public function and(): QueryFilter
     {
         return $this->addFilter(__FUNCTION__);

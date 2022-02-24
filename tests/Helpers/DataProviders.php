@@ -64,6 +64,9 @@ trait DataProviders
 
             'limit' => ['method' => 'limit', 'parameters' => ['limit' => 100]],
             'offset' => ['method' => 'offset', 'parameters' => ['offset' => 50]],
+
+            'asc' => ['method' => 'asc', 'parameters' => ['key' => 'animal']],
+            'desc' => ['method' => 'desc', 'parameters' => ['key' => 'animal']],
         ];
     }
 
@@ -110,10 +113,13 @@ trait DataProviders
                 'dateBetween' => ['query' => '`age` between ? and ?'],
                 'dateNotBetween' => ['query' => '`age` not between ? and ?'],
 
-                'filter-object' => ['query' => ['query'=>'(`owner` = ?)', 'parameters'=>['Jason']]],
+                'filter-object' => ['query' => ['query' => '(`owner` = ?)', 'parameters' => ['Jason']]],
 
-                'limit' => ['query' => 'limit 100', 'isLimit' => true],
-                'offset' => ['query' => 'offset 50', 'isLimit' => true],
+                'asc' => ['query' => 'order by `animal` asc', 'noParameters' => true],
+                'desc' => ['query' => 'order by `animal` desc', 'noParameters' => true],
+
+                'limit' => ['query' => 'limit 100', 'noParameters' => true],
+                'offset' => ['query' => 'offset 50', 'noParameters' => true],
             ]
         );
     }
@@ -124,7 +130,7 @@ trait DataProviders
      */
     protected function flattenArray(array $parameters): array
     {
-        $return = array();
+        $return = [];
 
         array_walk_recursive(
             $parameters,

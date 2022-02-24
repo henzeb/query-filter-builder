@@ -18,7 +18,7 @@ class BuilderTest extends TestCase
     /**
      * @param string $method
      * @param array $parameters
-     * @param string $query
+     * @param string|array $query
      * @param bool $noParameters
      * @return void
      *
@@ -48,7 +48,7 @@ class BuilderTest extends TestCase
     /**
      * @param string $method
      * @param array $parameters
-     * @param string $query
+     * @param array|string $query
      * @param bool $noParameters
      * @return void
      *
@@ -80,7 +80,7 @@ class BuilderTest extends TestCase
     /**
      * @param string $method
      * @param array $parameters
-     * @param string $query
+     * @param array|string $query
      * @param bool $noParameters
      * @return void
      *
@@ -110,7 +110,7 @@ class BuilderTest extends TestCase
     /**
      * @param string $method
      * @param array $parameters
-     * @param string $query
+     * @param array|string $query
      * @param bool $noParameters
      * @return void
      *
