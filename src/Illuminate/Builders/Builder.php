@@ -2,15 +2,15 @@
 
 namespace Henzeb\Query\Illuminate\Builders;
 
-use Closure;
+use DB;
 use DateTime;
-use Henzeb\Query\Builders\Contracts\QueryBuilder;
+use TypeError;
 use Henzeb\Query\Filters\Contracts\Filter;
 use Henzeb\Query\Filters\Contracts\QueryFilter;
-use Henzeb\Query\Illuminate\Filters\Contracts\Filter as IlluminateFilter;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Henzeb\Query\Builders\Contracts\QueryBuilder;
 use Illuminate\Database\Query\Builder as IlluminateBuilder;
-use TypeError;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Henzeb\Query\Illuminate\Filters\Contracts\Filter as IlluminateFilter;
 
 class Builder implements QueryBuilder
 {
@@ -219,6 +219,8 @@ class Builder implements QueryBuilder
 
     public function filter(Filter $filter): void
     {
+        $this->globalFilters($filter);
+
         $this->getBuilder()->where(
             $this->getNestingClosure(
                 $this->filterProxy($filter)
@@ -228,6 +230,8 @@ class Builder implements QueryBuilder
 
     public function orFilter(Filter $filter): void
     {
+        $this->globalFilters($filter);
+
         $this->getBuilder()->orWhere(
             $this->getNestingClosure(
                 $this->filterProxy($filter)
@@ -252,5 +256,24 @@ class Builder implements QueryBuilder
         throw new TypeError(
             '`' . self::class . ' expects `' . IlluminateFilter::class . '` but got `' . $filter::class . '`'
         );
+    }
+
+    private function globalFilters(Filter $filter)
+    {
+        $query = DB::query();
+        $this->filterProxy($filter)->build($query);
+        
+        if ($query->joins) {
+
+            $this->getBuilder()->joins = array_merge(
+                $this->getBuilder()->joins ?? [],
+                $query->joins ?? []
+            );
+
+            $this->getBuilder()->bindings['join'] = array_merge(
+                $this->getBuilder()->bindings['join'],
+                $query->bindings['join']
+            );
+        }
     }
 }

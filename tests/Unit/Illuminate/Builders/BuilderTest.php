@@ -9,6 +9,9 @@ use Henzeb\Query\Tests\Helpers\DataProviders;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Database\Query\Builder as IlluminateBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Henzeb\Query\Illuminate\Filters\Contracts\Filter as IlluminateFilter;
 
 
 class BuilderTest extends TestCase
@@ -181,5 +184,48 @@ class BuilderTest extends TestCase
         $this->expectError();
 
         (new Builder($laravelBuilder))->orFilter($myFilter);
+    }
+
+    public function testShouldBuildFilter() {
+        $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');;
+
+        $myFilter = new class implements IlluminateFilter {
+            public function build(EloquentBuilder|IlluminateBuilder $builder): void
+            {
+                $builder->join('owners_animals', 'animal_id', 'id')
+                    ->where('owner_id', 5);
+            }
+        };
+
+        (new Builder($laravelBuilder))->filter($myFilter);
+
+        $this->assertEquals(
+            'select * from `animals` inner join `owners_animals` on `animal_id` = `id` where `animal` = ? and (`owner_id` = ?)',
+            $laravelBuilder->toSql()
+        );
+    }
+
+    public function testShouldBuildOrFilter() {
+        $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');
+
+        $myFilter = new class implements IlluminateFilter {
+            public function build(EloquentBuilder|IlluminateBuilder $builder): void
+            {
+                $builder->joinSub(function(IlluminateBuilder $builder){
+                    $builder->from('owners')->where('country', 'NL');
+                }, 'owner', 'animal_id', 'id')->where('owner_id', 5);
+            }
+        };
+
+        (new Builder($laravelBuilder))->orFilter($myFilter);
+
+        $this->assertEquals(
+            'select * from `animals` inner join (select * from `owners` where `country` = ?) as `owner` on `animal_id` = `id` where `animal` = ? or (`owner_id` = ?)',
+            $laravelBuilder->toSql()
+        );
+        $this->assertEquals(
+            ['NL','dog', 5],
+            $laravelBuilder->getBindings()
+        );
     }
 }
