@@ -232,7 +232,7 @@ class PaginationTest extends TestCase
     {
         return [
             'config-disabled-fq-enabled' => [false, true,(new Query())->limit(12)],
-            'config-enabled-fq-disabled' => [true, false, (new Query())->limit(12)],
+            'config-enabled-fq-disabled' => [true, false, (new Query())],
             'both-disabled' => [false, false, (new Query())],
         ];
     }

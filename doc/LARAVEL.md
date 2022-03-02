@@ -42,13 +42,14 @@ class YourFormRequest extends FormRequest {
     protected bool $enablePagination = false; /** disable or enable pagination */
     
     protected bool $enableSorting = false; /** disable or enable sorting */
-    protected array $allowSorting = []; /** fields that are allowed for sorting */
+    protected array $allowedSorting = []; /** fields that are allowed for sorting */
+    protected array|string $defaultSort = []; /** default sort, can be a string or an array */
     protected int $defaultLimit = 10; /** The default limit */
     protected int $maxLimit = 50; /** The maximum allowed limit */    
 }
 ```
 By default, the package does not allow any fields for sorting.
-You have to add the fields you want to allow into the `$allowSorting` property. 
+You have to add the fields you want to allow into the `$allowedSorting` property. 
 The format is the same as specified in the
 [JSON:API specification: Sorting](https://jsonapi.org/format/1.1/#fetching-sorting), 
 except it's listed as an array:
@@ -59,6 +60,9 @@ protected array $allowSorting = [
     '-animal' /** descending */
 ];
 ```
+
+`defaultSort` works the same way, except it is allowed to be a string.
+
 ### Add your own filters
 To add your own filters, simply add the following method in your FormRequest. 
 You can use `filter` and `hasFilter` methods as shortcut to the filter 

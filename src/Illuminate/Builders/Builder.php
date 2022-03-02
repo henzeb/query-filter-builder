@@ -262,7 +262,7 @@ class Builder implements QueryBuilder
     {
         $query = DB::query();
         $this->filterProxy($filter)->build($query);
-        
+
         if ($query->joins) {
 
             $this->getBuilder()->joins = array_merge(

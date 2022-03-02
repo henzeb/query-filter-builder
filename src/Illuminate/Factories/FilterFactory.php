@@ -14,21 +14,22 @@ class FilterFactory
 
     public static function get(
         InputBag $inputBag,
-        bool $enableSorting,
-        bool $enablePagination,
-        int      $defaultLimit = null
+        ?bool    $enableSorting,
+        array|string|null $defaultSorting,
+        ?bool    $enablePagination,
+        ?int      $defaultLimit,
     ): Query
     {
         $query = new Query;
 
         $filterFactory = new self($query, $inputBag->all());
 
-        if ($enablePagination || config('filter.pagination.auto')) {
+        if ((null === $enablePagination && config('filter.pagination.auto')) || $enablePagination) {
             $filterFactory->parsePagination($defaultLimit);
         }
 
-        if ($enableSorting || config('filter.sorting.auto')) {
-            $filterFactory->parseSorting();
+        if ((null === $enableSorting && config('filter.sorting.auto')) || $enableSorting) {
+            $filterFactory->parseSorting($defaultSorting);
         }
 
         return $query;
@@ -57,14 +58,19 @@ class FilterFactory
         return join('.', array_filter($paths));
     }
 
-    private function parseSorting(): void
+    private function parseSorting(array|string|null $defaultSorting): void
     {
         $key = config('filter.sorting.key', 'sort');
 
-        if (Arr::has($this->parameters, $key)) {
-            $sorts = explode(',', $this->parameters[$key]);
+        $sorting = $this->stringToArray($defaultSorting);
 
-            foreach ($sorts as $sort) {
+        if (Arr::has($this->parameters, $key)) {
+            $sorting = $this->stringToArray($this->parameters[$key]);
+        }
+
+        if ($sorting) {
+
+            foreach ($sorting as $sort) {
 
                 if (str_starts_with($sort, '-')) {
                     $this->query->desc(ltrim($sort, '-'));
@@ -74,6 +80,19 @@ class FilterFactory
             }
 
         }
+    }
+
+    private function stringToArray(string|array|null $value): ?array
+    {
+        if(is_array($value)) {
+            return $value;
+        }
+
+        if(null===$value) {
+            return null;
+        }
+
+        return explode(',', $value);
     }
 
 }

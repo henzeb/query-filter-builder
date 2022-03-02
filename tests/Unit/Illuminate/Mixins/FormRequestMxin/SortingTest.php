@@ -109,7 +109,7 @@ class SortingTest extends TestCase
             'config-disabled-fq-enabled' =>
                 [false, true, (new Query())->limit(50)->asc('animal')],
             'config-enabled-fq-disabled' =>
-                [true, false, (new Query())->limit(50)->asc('animal')],
+                [true, false, (new Query())->limit(50)],
             'both-enabled' =>
                 [true, true, (new Query())->limit(50)->asc('animal')],
             'both-disabled' =>
@@ -149,5 +149,47 @@ class SortingTest extends TestCase
         $this->expectException(ValidationException::class);
 
         $formRequest->getFilter();
+    }
+
+    public function testShouldAllowDefaultSortingInFormRequest()
+    {
+        $formRequest = $this->getFormRequest();
+        $formRequest->enablePagination = false;
+        $formRequest->defaultSort = 'id';
+
+
+        $this->assertEquals(
+            (new Query())->asc('id'),
+            $formRequest->getFilter()
+        );
+    }
+
+    public function testShouldAllowDefaultSortingAsArrayInFormRequest()
+    {
+        $formRequest = $this->getFormRequest();
+        $formRequest->enablePagination = false;
+        $formRequest->defaultSort = ['-id'];
+
+
+        $this->assertEquals(
+            (new Query())->desc('id'),
+            $formRequest->getFilter()
+        );
+    }
+
+    public function testShouldNotUseDefaultWhenSortIsGiven()
+    {
+        $formRequest = $this->getFormRequest();
+
+        $formRequest->enablePagination = false;
+        $formRequest->allowedSorting = ['animal'];
+        $formRequest->defaultSort = ['-id'];
+
+        $formRequest->query = new InputBag(['sort' => 'animal']);
+
+        $this->assertEquals(
+            (new Query())->asc('animal'),
+            $formRequest->getFilter()
+        );
     }
 }

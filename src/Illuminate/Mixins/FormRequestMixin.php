@@ -55,9 +55,10 @@ class FormRequestMixin
 
             $filters = FilterFactory::get(
                 $this->query,
-                $this->enableSorting ?? false,
-                $this->enablePagination ?? false,
-                $this->defaultLimit ?? null
+                $this->enableSorting ?? null,
+                $this->defaultSort ?? null,
+                $this->enablePagination ?? null,
+                $this->defaultLimit ?? null,
             );
 
             if (method_exists($this, 'filters')) {
