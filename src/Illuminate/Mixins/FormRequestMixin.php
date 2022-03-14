@@ -87,8 +87,33 @@ class FormRequestMixin
 
             return Arr::get(
                 $this->query->all(),
-                $key, $default
+                $key,
+                $default
             );
+        };
+    }
+
+    public function filterArray(): Closure
+    {
+        return function (string $key, mixed $default = null): array {
+            /**
+             * @var $this FormRequest
+             */
+            $result = $this->filter($key, $default);
+
+            if (is_string($result) && str_contains($result, ',')) {
+                return array_filter(
+                    array_map('trim',
+                        explode(',', $result)
+                    )
+                );
+            }
+
+            if(is_array($result)) {
+                return $result;
+            }
+
+            return array_filter([$result]);
         };
     }
 

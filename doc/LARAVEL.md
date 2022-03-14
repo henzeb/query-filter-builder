@@ -63,18 +63,24 @@ protected array $allowSorting = [
 
 `defaultSort` works the same way, except it is allowed to be a string.
 
-### Add your own filters
+### Add your filters
 To add your own filters, simply add the following method in your FormRequest. 
-You can use `filter` and `hasFilter` methods as shortcut to the filter 
+You can use `filter`, `filterArray` and `hasFilter` methods as shortcut to the filter 
 query parameter family as specified in [JSON:API specification: Filtering](https://jsonapi.org/format/1.1/#fetching-filtering)
 
-
+The `filterArray` method makes sure the result is always returned as an array, so you can pass a comma separated 
+string in your `filter['animals]` as per recommendation or an array.
 ```php
 private function filters(Query $query): void
 {
     if($this->hasFilter('animal')) {
         $query->is('animal_field', $this->filter('animal'));
     }
+    
+    if($this->hasFilter('animals')) {
+        $query->in('animal_field', $this->filterArray('animals'));
+    }
+    
 }
 ```
 Note: You need to add your own validations in your rules method.

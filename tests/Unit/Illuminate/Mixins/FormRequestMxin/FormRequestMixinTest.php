@@ -34,6 +34,24 @@ class FormRequestMixinTest extends TestCase
             'basic' => [['filter' => ['animal' => 'dog']], 'animal', 'dog'],
             'boolean' => [['filter' => ['alive' => true]], 'alive', true],
             'integer' => [['filter' => ['age' => 100]], 'age', 100],
+            'comma-separated-string' => [['filter' => ['animal' => 'dog,cat']], 'animal', 'dog,cat'],
+            'nested-array' => [['filter' => ['animal' => ['type' => 'mammal']]], 'animal.type', 'mammal'],
+            'default' => [['filter' => []], 'animal', 'cat', 'cat'],
+        ];
+    }
+
+
+    public function providesTestCasesForFilterArray(): array
+    {
+        return [
+            'basic' => [['filter' => ['animal' => 'dog']], 'animal', 'dog'],
+            'boolean' => [['filter' => ['alive' => true]], 'alive', true],
+            'integer' => [['filter' => ['age' => 100]], 'age', 100],
+            'array' => [['filter' => ['animal' => ['dog','cat'] ]], 'animal', ['dog','cat']],
+            'comma-separated-string' => [['filter' => ['animal' => 'dog,cat']], 'animal', ['dog','cat']],
+            'comma-separated-string-with-spaces' => [['filter' => ['animal' => 'dog, cat']], 'animal', ['dog','cat']],
+            'random-comma' => [['filter' => ['animal' => ',']], 'animal', []],
+            'just-some-commas' => [['filter' => ['animal' => ', , ,']], 'animal', []],
             'nested-array' => [['filter' => ['animal' => ['type' => 'mammal']]], 'animal.type', 'mammal'],
             'default' => [['filter' => []], 'animal', 'cat', 'cat'],
         ];
@@ -66,6 +84,30 @@ class FormRequestMixinTest extends TestCase
         $this->assertEquals(
             $expected,
             $mock->filter($filter, $default)
+        );
+    }
+
+    /**
+     * @param array $input
+     * @param string $filter
+     * @param mixed $expected
+     * @param mixed|null $default
+     * @return void
+     *
+     * @dataProvider providesTestCasesForFilterArray
+     */
+    public function testFilterArrayShouldReturnValueAsArray(array $input, string $filter, mixed $expected, mixed $default = null)
+    {
+        $mock = $this->getFormRequest();
+        $mock->query = new InputBag($input);
+
+        if(!is_array($expected)) {
+            $expected = [$expected];
+        }
+
+        $this->assertEquals(
+            $expected,
+            $mock->filterArray($filter, $default)
         );
     }
 

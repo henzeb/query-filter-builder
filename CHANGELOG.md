@@ -2,6 +2,10 @@
 
 All notable changes to `Query Filter Builder` will be documented in this file
 
+## 1.1.3 - 2022-03-14
+
+- added filterArray to easily handle comma separated strings as per recommendation in the JSON:API specification
+
 ## 1.1.2 - 2022-03-02
 
 - a few bugfixes
