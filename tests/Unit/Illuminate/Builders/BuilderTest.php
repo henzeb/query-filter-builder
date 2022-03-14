@@ -2,13 +2,13 @@
 
 namespace Henzeb\Query\Tests\Unit\Illuminate\Builders;
 
-use Henzeb\Query\Filters\Contracts\Filter;
 use Henzeb\Query\Filters\Query;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Henzeb\Query\Filters\Contracts\Filter;
 use Henzeb\Query\Illuminate\Builders\Builder;
 use Henzeb\Query\Tests\Helpers\DataProviders;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Orchestra\Testbench\TestCase;
 use Illuminate\Database\Query\Builder as IlluminateBuilder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Henzeb\Query\Illuminate\Filters\Contracts\Filter as IlluminateFilter;
@@ -27,19 +27,21 @@ class BuilderTest extends TestCase
      *
      * @dataProvider providesFilterWithQueryTestcases
      */
-    public function testShouldBuild(string $method, array $parameters, string|array $query, bool $noParameters = false): void
+    public function testShouldBuild(string $method, array $parameters, ?string $expectedMethod, string|array $query, bool $noParameters = false): void
     {
         $laravelBuilder = DB::query()->from('animals');
 
         $builder = new Builder($laravelBuilder);
 
-        $flattenedParameters = $this->flattenArray($parameters);
+        $flattenedParameters = array_filter($this->flattenArray($parameters));
+
+        $method = $expectedMethod ?? $method;
 
         $builder->$method(...$flattenedParameters);
 
         array_shift($flattenedParameters);
 
-        if(is_array($query)) {
+        if (is_array($query)) {
             $flattenedParameters = $query['parameters'];
             $query = $query['query'];
         }
@@ -57,11 +59,13 @@ class BuilderTest extends TestCase
      *
      * @dataProvider providesFilterWithQueryTestcases
      */
-    public function testShouldBuildWithOr(string $method, array $parameters, array|string $query, bool $noParameters = false): void
+    public function testShouldBuildWithOr(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
         $illuminateBuilder = DB::query()->from('animals')->whereRaw('true');
 
         $builder = new Builder($illuminateBuilder);
+
+        $method = $expectedMethod ?? $method;
 
         $flattenedParameters = $this->flattenArray($parameters);
         if (!$noParameters) {
@@ -71,13 +75,13 @@ class BuilderTest extends TestCase
 
         array_shift($flattenedParameters);
 
-        if(is_array($query)) {
+        if (is_array($query)) {
             $flattenedParameters = $query['parameters'];
             $query = $query['query'];
         }
 
         $this->assertEquals('select * from `animals` where true ' . ($noParameters ? '' : 'or ') . $query, $illuminateBuilder->toSql());
-        $this->assertEquals($illuminateBuilder->getBindings(), $noParameters ? [] : array_values($flattenedParameters));
+        $this->assertEquals($illuminateBuilder->getBindings(), $noParameters ? [] : array_filter(array_values($flattenedParameters)));
     }
 
     /**
@@ -89,10 +93,12 @@ class BuilderTest extends TestCase
      *
      * @dataProvider providesFilterWithQueryTestcases
      */
-    public function testShouldBuildWithGroup(string $method, array $parameters, array|string $query, bool $noParameters = false): void
+    public function testShouldBuildWithNest(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
         $illuminateBuilder = DB::query()->from('animals')->whereRaw('true');
         $builder = new Builder($illuminateBuilder);
+
+        $method = $expectedMethod ?? $method;
 
         $queryFilter = new Query();
         $parameters = $this->flattenArray($parameters);
@@ -101,13 +107,13 @@ class BuilderTest extends TestCase
 
         array_shift($parameters);
 
-        if(is_array($query)) {
+        if (is_array($query)) {
             $parameters = $query['parameters'];
             $query = $query['query'];
         }
 
         $this->assertEquals('select * from `animals` where true' . ($noParameters ? '' : ' and (' . $query . ')'), $illuminateBuilder->toSql());
-        $this->assertEquals($noParameters ? [] : $parameters, $illuminateBuilder->getBindings());
+        $this->assertEquals($noParameters ? [] : array_filter($parameters), $illuminateBuilder->getBindings());
     }
 
     /**
@@ -119,10 +125,12 @@ class BuilderTest extends TestCase
      *
      * @dataProvider providesFilterWithQueryTestcases
      */
-    public function testShouldBuildWithGroupOr(string $method, array $parameters, array|string $query, bool $noParameters = false): void
+    public function testShouldBuildWithGroupOr(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
         $laravelBuilder = DB::query()->from('animals');
         $builder = new Builder($laravelBuilder);
+
+        $method = $expectedMethod ?? $method;
 
         $queryFilter = new Query();
         $parameters = $this->flattenArray($parameters);
@@ -132,7 +140,7 @@ class BuilderTest extends TestCase
 
         array_shift($parameters);
 
-        if(is_array($query)) {
+        if (is_array($query)) {
             $parameters = $query['parameters'];
             $query = $query['query'];
         }
@@ -140,7 +148,7 @@ class BuilderTest extends TestCase
         array_unshift($parameters, 'horse');
 
         $this->assertEquals('select * from `animals` where `animal` = ?' . ($noParameters ? '' : ' or (' . $query . ')'), $laravelBuilder->toSql());
-        $this->assertEquals($noParameters ? ['horse'] : $parameters, $laravelBuilder->getBindings());
+        $this->assertEquals($noParameters ? ['horse'] : array_filter($parameters), $laravelBuilder->getBindings());
     }
 
     public function testAcceptsEloquentBuilderInstance()
@@ -160,7 +168,8 @@ class BuilderTest extends TestCase
         );
     }
 
-    public function testShouldNotAllowNonIlluminateFilters() {
+    public function testShouldNotAllowNonIlluminateFilters()
+    {
 
         $laravelBuilder = DB::query()->from('animals');
 
@@ -173,7 +182,8 @@ class BuilderTest extends TestCase
         (new Builder($laravelBuilder))->filter($myFilter);
     }
 
-    public function testShouldNotAllowNonIlluminateFiltersWhenOr() {
+    public function testShouldNotAllowNonIlluminateFiltersWhenOr()
+    {
 
         $laravelBuilder = DB::query()->from('animals');
 
@@ -186,7 +196,8 @@ class BuilderTest extends TestCase
         (new Builder($laravelBuilder))->orFilter($myFilter);
     }
 
-    public function testShouldBuildFilter() {
+    public function testShouldBuildFilter()
+    {
         $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');;
 
         $myFilter = new class implements IlluminateFilter {
@@ -205,13 +216,14 @@ class BuilderTest extends TestCase
         );
     }
 
-    public function testShouldBuildOrFilter() {
+    public function testShouldBuildOrFilter()
+    {
         $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');
 
         $myFilter = new class implements IlluminateFilter {
             public function build(EloquentBuilder|IlluminateBuilder $builder): void
             {
-                $builder->joinSub(function(IlluminateBuilder $builder){
+                $builder->joinSub(function (IlluminateBuilder $builder) {
                     $builder->from('owners')->where('country', 'NL');
                 }, 'owner', 'animal_id', 'id')->where('owner_id', 5);
             }
@@ -224,7 +236,7 @@ class BuilderTest extends TestCase
             $laravelBuilder->toSql()
         );
         $this->assertEquals(
-            ['NL','dog', 5],
+            ['NL', 'dog', 5],
             $laravelBuilder->getBindings()
         );
     }

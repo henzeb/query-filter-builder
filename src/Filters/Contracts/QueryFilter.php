@@ -8,9 +8,9 @@ use henzeb\Query\Builders\Contracts\QueryBuilder;
 
 interface QueryFilter
 {
-    public function is(string $key, string|float|int|bool $value): self;
+    public function is(string $key, string|float|int|bool|null $value): self;
 
-    public function not(string $key, string|float|int|bool $value): self;
+    public function not(string $key, string|float|int|bool|null $value): self;
 
     public function empty(string $key): self;
 

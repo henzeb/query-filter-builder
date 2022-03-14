@@ -2,6 +2,10 @@
 
 All notable changes to `Query Filter Builder` will be documented in this file
 
+## 1.1.4 - 2022-03-14
+
+- when `is` or `not` receives `null`, it should turn into `empty`/`notEmpty`
+
 ## 1.1.3 - 2022-03-14
 
 - added filterArray to easily handle comma separated strings as per recommendation in the JSON:API specification

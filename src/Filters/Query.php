@@ -66,13 +66,21 @@ class Query implements QueryFilter
         return true;
     }
 
-    public function is(string $key, float|bool|int|string $value): QueryFilter
+    public function is(string $key, float|bool|int|string|null $value): QueryFilter
     {
+        if(null===$value) {
+            return $this->empty($key);
+        }
+
         return $this->addFilter(__FUNCTION__, get_defined_vars());
     }
 
-    public function not(string $key, float|bool|int|string $value): QueryFilter
+    public function not(string $key, float|bool|int|string|null $value): QueryFilter
     {
+        if(null===$value) {
+            return $this->notEmpty($key);
+        }
+
         return $this->addFilter(__FUNCTION__, get_defined_vars());
     }
 

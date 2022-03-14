@@ -18,55 +18,57 @@ trait DataProviders
     public function providesFilterTestcases(): array
     {
         return [
-            'is' => ['method' => 'is', 'parameters' => ['key' => 'animal', 'value' => 'cat']],
-            'not' => ['method' => 'not', 'parameters' => ['key' => 'animal', 'value' => 'dog']],
+            'is' => ['method' => 'is', 'parameters' => ['key' => 'animal', 'value' => 'cat'], null],
+            'is-null' => ['method' => 'is', 'parameters' => ['key' => 'animal', 'value' => null], 'empty'],
+            'not' => ['method' => 'not', 'parameters' => ['key' => 'animal', 'value' => 'dog'], null],
+            'not-null' => ['method' => 'not', 'parameters' => ['key' => 'animal', 'value' => null], 'notEmpty'],
 
-            'empty' => ['method' => 'empty', 'parameters' => ['key' => 'name']],
-            'notEmpty' => ['method' => 'notEmpty', 'parameters' => ['key' => 'name']],
+            'empty' => ['method' => 'empty', 'parameters' => ['key' => 'name'], null],
+            'notEmpty' => ['method' => 'notEmpty', 'parameters' => ['key' => 'name'], null],
 
-            'in' => ['method' => 'in', 'parameters' => ['key' => 'animal', 'in' => ['dog']]],
-            'in-multi' => ['method' => 'in', 'parameters' => ['key' => 'animal', 'in' => ['dog', 'cat']]],
+            'in' => ['method' => 'in', 'parameters' => ['key' => 'animal', 'in' => ['dog']], null],
+            'in-multi' => ['method' => 'in', 'parameters' => ['key' => 'animal', 'in' => ['dog', 'cat']], null],
 
-            'notIn' => ['method' => 'notIn', 'parameters' => ['key' => 'animal', 'notIn' => ['dog']]],
-            'notIn-multi' => ['method' => 'notIn', 'parameters' => ['key' => 'animal', 'notIn' => ['dog', 'cat']]],
+            'notIn' => ['method' => 'notIn', 'parameters' => ['key' => 'animal', 'notIn' => ['dog']], null],
+            'notIn-multi' => ['method' => 'notIn', 'parameters' => ['key' => 'animal', 'notIn' => ['dog', 'cat']], null],
 
-            'like' => ['method' => 'like', 'parameters' => ['key' => 'animal', 'like' => '%dog%']],
-            'notLike' => ['method' => 'notLike', 'parameters' => ['key' => 'animal', 'notLike' => '%dog%']],
+            'like' => ['method' => 'like', 'parameters' => ['key' => 'animal', 'like' => '%dog%'], null],
+            'notLike' => ['method' => 'notLike', 'parameters' => ['key' => 'animal', 'notLike' => '%dog%'], null],
 
-            'less-int' => ['method' => 'less', 'parameters' => ['key' => 'height', 'less' => 10]],
-            'less-float' => ['method' => 'less', 'parameters' => ['key' => 'height', 'less' => 10.5]],
-            'less-date' => ['method' => 'less', 'parameters' => ['key' => 'age', 'less' => new DateTime()]],
+            'less-int' => ['method' => 'less', 'parameters' => ['key' => 'height', 'less' => 10], null],
+            'less-float' => ['method' => 'less', 'parameters' => ['key' => 'height', 'less' => 10.5], null],
+            'less-date' => ['method' => 'less', 'parameters' => ['key' => 'age', 'less' => new DateTime()], null],
 
-            'greater-int' => ['method' => 'greater', 'parameters' => ['key' => 'height', 'greater' => 10]],
-            'greater-float' => ['method' => 'greater', 'parameters' => ['key' => 'height', 'greater' => 10.5]],
-            'greater-date' => ['method' => 'greater', 'parameters' => ['key' => 'age', 'greater' => new DateTime()]],
+            'greater-int' => ['method' => 'greater', 'parameters' => ['key' => 'height', 'greater' => 10], null],
+            'greater-float' => ['method' => 'greater', 'parameters' => ['key' => 'height', 'greater' => 10.5], null],
+            'greater-date' => ['method' => 'greater', 'parameters' => ['key' => 'age', 'greater' => new DateTime()], null],
 
-            'lessOrEqual-int' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'height', 'lessOrEqual' => 10]],
-            'lessOrEqual-float' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'height', 'lessOrEqual' => 10.5]],
-            'lessOrEqual-date' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'age', 'lessOrEqual' => new DateTime()]],
+            'lessOrEqual-int' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'height', 'lessOrEqual' => 10], null],
+            'lessOrEqual-float' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'height', 'lessOrEqual' => 10.5], null],
+            'lessOrEqual-date' => ['method' => 'lessOrEqual', 'parameters' => ['key' => 'age', 'lessOrEqual' => new DateTime()], null],
 
-            'greaterOrEqual-int' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'height', 'greaterOrEqual' => 10]],
-            'greaterOrEqual-float' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'height', 'greaterOrEqual' => 10.5]],
-            'greaterOrEqual-date' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'age', 'greaterOrEqual' => new DateTime()]],
+            'greaterOrEqual-int' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'height', 'greaterOrEqual' => 10], null],
+            'greaterOrEqual-float' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'height', 'greaterOrEqual' => 10.5], null],
+            'greaterOrEqual-date' => ['method' => 'greaterOrEqual', 'parameters' => ['key' => 'age', 'greaterOrEqual' => new DateTime()], null],
 
-            'between' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1]],
-            'between-mixed-1' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1.5]],
-            'between-mixed-2' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1.1, 'high' => 2]],
+            'between' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1], null],
+            'between-mixed-1' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1.5], null],
+            'between-mixed-2' => ['method' => 'between', 'parameters' => ['key' => 'age', 'low' => 1.1, 'high' => 2], null],
 
-            'notBetween' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1]],
-            'notBetween-mixed-1' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1.5]],
-            'notBetween-mixed-2' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1.1, 'high' => 2]],
+            'notBetween' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1], null],
+            'notBetween-mixed-1' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1, 'high' => 1.5], null],
+            'notBetween-mixed-2' => ['method' => 'notBetween', 'parameters' => ['key' => 'age', 'low' => 1.1, 'high' => 2], null],
 
-            'dateBetween' => ['method' => 'dateBetween', 'parameters' => ['key' => 'age', 'low' => new DateTime(), 'high' => new DateTime()]],
-            'dateNotBetween' => ['method' => 'dateNotBetween', 'parameters' => ['key' => 'age', 'low' => new DateTime(), 'high' => new DateTime()]],
+            'dateBetween' => ['method' => 'dateBetween', 'parameters' => ['key' => 'age', 'low' => new DateTime(), 'high' => new DateTime()], null],
+            'dateNotBetween' => ['method' => 'dateNotBetween', 'parameters' => ['key' => 'age', 'low' => new DateTime(), 'high' => new DateTime()], null],
 
-            'filter-object' => ['method' => 'filter', 'parameters' => ['filter' => new OwnerFilter()]],
+            'filter-object' => ['method' => 'filter', 'parameters' => ['filter' => new OwnerFilter()], null],
 
-            'limit' => ['method' => 'limit', 'parameters' => ['limit' => 100]],
-            'offset' => ['method' => 'offset', 'parameters' => ['offset' => 50]],
+            'limit' => ['method' => 'limit', 'parameters' => ['limit' => 100], null],
+            'offset' => ['method' => 'offset', 'parameters' => ['offset' => 50], null],
 
-            'asc' => ['method' => 'asc', 'parameters' => ['key' => 'animal']],
-            'desc' => ['method' => 'desc', 'parameters' => ['key' => 'animal']],
+            'asc' => ['method' => 'asc', 'parameters' => ['key' => 'animal'], null],
+            'desc' => ['method' => 'desc', 'parameters' => ['key' => 'animal'], null],
         ];
     }
 
@@ -76,7 +78,9 @@ trait DataProviders
             $this->providesFilterTestcases(),
             [
                 'is' => ['query' => '`animal` = ?'],
+                'is-null' => ['query' => '`animal` is null'],
                 'not' => ['query' => '`animal` != ?'],
+                'not-null' => ['query' => '`animal` is not null'],
                 'empty' => ['query' => '`name` is null'],
                 'notEmpty' => ['query' => '`name` is not null'],
                 'in' => ['query' => '`animal` in (?)'],

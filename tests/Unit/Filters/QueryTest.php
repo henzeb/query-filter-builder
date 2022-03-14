@@ -40,7 +40,7 @@ class QueryTest extends MockeryTestCase
      *
      * @dataProvider providesFilterTestcases
      */
-    public function testShouldAddFilter(string $method, array $parameters): void
+    public function testShouldAddFilter(string $method, array $parameters, string $expectedMethod = null): void
     {
         $queryFilter = $this->getMock();
         $expectedParameters = $parameters;
@@ -51,7 +51,7 @@ class QueryTest extends MockeryTestCase
 
         $this->assertEquals(
             [
-                ['action' => $method, 'parameters' => $expectedParameters]
+                ['action' => $expectedMethod ?? $method, 'parameters' => array_filter($expectedParameters)]
             ],
             $queryFilter->getFilters()
         );
@@ -207,7 +207,7 @@ class QueryTest extends MockeryTestCase
      * @return void
      * @dataProvider providesFilterTestcases
      */
-    public function testShouldBuildSimple(string $method, $parameters)
+    public function testShouldBuildSimple(string $method, array $parameters, string $expectedMethod = null): void
     {
         $query = $this->getMock(false);
 
@@ -217,7 +217,8 @@ class QueryTest extends MockeryTestCase
 
         $builder = Mockery::mock(QueryBuilder::class.'[empty]');
 
-        $builder->expects($method)->withArgs(array_values($parameters));
+
+        $builder->expects($expectedMethod ?? $method)->withArgs(array_filter(array_values($parameters)));
 
         $query->build($builder);
     }
@@ -228,7 +229,7 @@ class QueryTest extends MockeryTestCase
      * @return void
      * @dataProvider providesFilterTestcases
      */
-    public function testShouldBuildOr(string $method, $parameters): void
+    public function testShouldBuildOr(string $method, array $parameters, string $expectedMethod = null): void
     {
         $queryFilter = $this->getMock(false);
         $queryFilter->is('is', 'test');
@@ -238,7 +239,7 @@ class QueryTest extends MockeryTestCase
         $builder = Mockery::mock(QueryBuilder::class.'[empty]');
         $builder->expects('is')->once();
 
-        $orMethod = 'or' . ucfirst($method);
+        $orMethod = 'or' . ucfirst($expectedMethod ?? $method);
         if (method_exists($builder, $orMethod)) {
             $method = $orMethod;
         }
