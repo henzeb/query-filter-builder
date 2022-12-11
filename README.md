@@ -1,7 +1,8 @@
 # Query Filter Builder
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/query-filter-builder.svg?style=flat-square)](https://packagist.org/packages/henzeb/query-filter-builder)
-[![Total Downloads](https://img.shields.io/packagist/dt/henzeb/query-filter-builder.svg?style=flat-square)](https://packagist.org/packages/henzeb/query-filter-builder)
+[![Build Status](https://github.com/henzeb/query-filter-builder/workflows/tests/badge.svg)](https://github.com/henzeb/query-filter-builder/actions)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/query-filter-builder.svg)](https://packagist.org/packages/henzeb/query-filter-builder)
+[![Total Downloads](https://img.shields.io/packagist/dt/henzeb/query-filter-builder.svg)](https://packagist.org/packages/henzeb/query-filter-builder)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/03335803f33d12bc45bd/test_coverage)](https://codeclimate.com/github/henzeb/query-filter-builder/test_coverage)
 
 Whenever you need filters on your API's endpoints, this package gives you 
 a nice and simple interface that allows you to add filters without the 

@@ -141,7 +141,7 @@ class PaginationTest extends TestCase
         );
     }
 
-    protected function providesValidationFailures()
+    public function providesValidationFailures(): array
     {
         return [
             'size-as-string' => [
