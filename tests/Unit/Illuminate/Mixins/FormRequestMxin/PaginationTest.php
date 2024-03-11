@@ -15,7 +15,7 @@ class PaginationTest extends TestCase
     use Mocks;
 
 
-    public function providesPaginationInputBags()
+    public static function providesPaginationInputBags(): array
     {
         return [
             'different-default-limit' => [
@@ -141,7 +141,7 @@ class PaginationTest extends TestCase
         );
     }
 
-    public function providesValidationFailures(): array
+    public static function providesValidationFailures(): array
     {
         return [
             'size-as-string' => [
@@ -228,7 +228,7 @@ class PaginationTest extends TestCase
         Config::set('filter.pagination.auto', true);
     }
 
-    public function providesEnablePaginationTestcases()
+    public static function providesEnablePaginationTestcases(): array
     {
         return [
             'config-disabled-fq-enabled' => [false, true,(new Query())->limit(12)],

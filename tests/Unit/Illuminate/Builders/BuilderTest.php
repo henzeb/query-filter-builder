@@ -3,6 +3,7 @@
 namespace Henzeb\Query\Tests\Unit\Illuminate\Builders;
 
 use Henzeb\Query\Filters\Query;
+use Henzeb\Query\Tests\Helpers\Errors;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -16,11 +17,12 @@ use Henzeb\Query\Illuminate\Filters\Contracts\Filter as IlluminateFilter;
 
 class BuilderTest extends TestCase
 {
-    use DataProviders;
+    use DataProviders, Errors;
 
     /**
      * @param string $method
      * @param array $parameters
+     * @param string|null $expectedMethod
      * @param string|array $query
      * @param bool $noParameters
      * @return void
@@ -29,7 +31,7 @@ class BuilderTest extends TestCase
      */
     public function testShouldBuild(string $method, array $parameters, ?string $expectedMethod, string|array $query, bool $noParameters = false): void
     {
-        $laravelBuilder = DB::query()->from('animals');
+        $laravelBuilder = DB::connection('mysql')->query()->from('animals');
 
         $builder = new Builder($laravelBuilder);
 
@@ -61,7 +63,7 @@ class BuilderTest extends TestCase
      */
     public function testShouldBuildWithOr(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
-        $illuminateBuilder = DB::query()->from('animals')->whereRaw('true');
+        $illuminateBuilder = DB::connection('mysql')->query()->from('animals')->whereRaw('true');
 
         $builder = new Builder($illuminateBuilder);
 
@@ -95,7 +97,7 @@ class BuilderTest extends TestCase
      */
     public function testShouldBuildWithNest(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
-        $illuminateBuilder = DB::query()->from('animals')->whereRaw('true');
+        $illuminateBuilder = DB::connection('mysql')->query()->from('animals')->whereRaw('true');
         $builder = new Builder($illuminateBuilder);
 
         $method = $expectedMethod ?? $method;
@@ -127,7 +129,7 @@ class BuilderTest extends TestCase
      */
     public function testShouldBuildWithGroupOr(string $method, array $parameters, ?string $expectedMethod, array|string $query, bool $noParameters = false): void
     {
-        $laravelBuilder = DB::query()->from('animals');
+        $laravelBuilder = DB::connection('mysql')->query()->from('animals');
         $builder = new Builder($laravelBuilder);
 
         $method = $expectedMethod ?? $method;
@@ -157,7 +159,7 @@ class BuilderTest extends TestCase
             protected $table = 'my_table';
         };
 
-        $query = $model->where('alive', true);
+        $query = $model->setConnection('mysql')->where('alive', true);
 
         $builder = new Builder($query);
         $builder->is('animal', 'cat');
@@ -171,7 +173,7 @@ class BuilderTest extends TestCase
     public function testShouldNotAllowNonIlluminateFilters()
     {
 
-        $laravelBuilder = DB::query()->from('animals');
+        $laravelBuilder = DB::connection('mysql')->query()->from('animals');
 
         $myFilter = new class implements Filter {
 
@@ -185,7 +187,7 @@ class BuilderTest extends TestCase
     public function testShouldNotAllowNonIlluminateFiltersWhenOr()
     {
 
-        $laravelBuilder = DB::query()->from('animals');
+        $laravelBuilder = DB::connection('mysql')->query()->from('animals');
 
         $myFilter = new class implements Filter {
 
@@ -198,7 +200,7 @@ class BuilderTest extends TestCase
 
     public function testShouldBuildFilter()
     {
-        $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');;
+        $laravelBuilder = DB::connection('mysql')->query()->from('animals')->where('animal', 'dog');;
 
         $myFilter = new class implements IlluminateFilter {
             public function build(EloquentBuilder|IlluminateBuilder $builder): void
@@ -218,6 +220,7 @@ class BuilderTest extends TestCase
 
     public function testShouldBuildOrFilter()
     {
+        DB::setDefaultConnection('mysql');
         $laravelBuilder = DB::query()->from('animals')->where('animal', 'dog');
 
         $myFilter = new class implements IlluminateFilter {

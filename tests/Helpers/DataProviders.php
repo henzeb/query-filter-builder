@@ -7,7 +7,7 @@ use Henzeb\Query\Tests\Fixtures\OwnerFilter;
 
 trait DataProviders
 {
-    public function providesOperators(): array
+    public static function providesOperators(): array
     {
         return [
             'and' => ['and'],
@@ -15,7 +15,7 @@ trait DataProviders
         ];
     }
 
-    public function providesFilterTestcases(): array
+    public static function providesFilterTestcases(): array
     {
         return [
             'is' => ['method' => 'is', 'parameters' => ['key' => 'animal', 'value' => 'cat'], null],
@@ -72,10 +72,10 @@ trait DataProviders
         ];
     }
 
-    public function providesFilterWithQueryTestcases(): array
+    public static function providesFilterWithQueryTestcases(): array
     {
         return array_merge_recursive(
-            $this->providesFilterTestcases(),
+            static::providesFilterTestcases(),
             [
                 'is' => ['query' => '`animal` = ?'],
                 'is-null' => ['query' => '`animal` is null'],

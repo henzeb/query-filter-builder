@@ -28,7 +28,7 @@ class FormRequestMixinTest extends TestCase
         );
     }
 
-    public function providesTestCasesForFilter(): array
+    public static function providesTestCasesForFilter(): array
     {
         return [
             'basic' => [['filter' => ['animal' => 'dog']], 'animal', 'dog'],
@@ -41,7 +41,7 @@ class FormRequestMixinTest extends TestCase
     }
 
 
-    public function providesTestCasesForFilterArray(): array
+    public static function providesTestCasesForFilterArray(): array
     {
         return [
             'basic' => [['filter' => ['animal' => 'dog']], 'animal', 'dog'],
@@ -57,7 +57,7 @@ class FormRequestMixinTest extends TestCase
         ];
     }
 
-    public function providesTestCasesForHasFilter(): array
+    public static function providesTestCasesForHasFilter(): array
     {
         return [
             'basic' => [['filter' => ['animal' => 'dog']], 'animal', true],

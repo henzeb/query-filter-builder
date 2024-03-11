@@ -13,7 +13,7 @@ class SortingTest extends TestCase
 {
     use Mocks;
 
-    public function providesSortingSituations(): array
+    public static function providesSortingSituations(): array
     {
         return [
             'asc' => ['input' => ['sort' => 'animal'], 'expected' => (new Query())->limit(50)->asc('animal')],
@@ -67,7 +67,7 @@ class SortingTest extends TestCase
         );
     }
 
-    public function provideSortingValidationFailures(): array
+    public static function provideSortingValidationFailures(): array
     {
         return [
             'boolean' => [true],
@@ -103,7 +103,7 @@ class SortingTest extends TestCase
         $formRequest->getFilter();
     }
 
-    public function providesEnablePaginationTestcases()
+    public static function providesEnablePaginationTestcases(): array
     {
         return [
             'config-disabled-fq-enabled' =>

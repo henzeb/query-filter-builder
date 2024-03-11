@@ -5,13 +5,14 @@ namespace Henzeb\Query\Tests\Filters;
 use Henzeb\Query\Builders\Contracts\QueryBuilder;
 use Henzeb\Query\Filters\Query;
 use Henzeb\Query\Tests\Helpers\DataProviders;
+use Henzeb\Query\Tests\Helpers\Errors;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
 
 class QueryTest extends MockeryTestCase
 {
-    use DataProviders;
+    use DataProviders, Errors;
 
     public function getMock(bool $withGetFilters = true): Query|Mock
     {
@@ -36,6 +37,7 @@ class QueryTest extends MockeryTestCase
     /**
      * @param string $method
      * @param array $parameters
+     * @param string|null $expectedMethod
      * @return void
      *
      * @dataProvider providesFilterTestcases
